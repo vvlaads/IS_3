@@ -5,8 +5,7 @@ import lab.data.enums.MpaaRating;
 import lab.util.DBObject;
 import lab.util.annotations.*;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity

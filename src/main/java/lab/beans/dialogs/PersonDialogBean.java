@@ -1,30 +1,36 @@
 package lab.beans.dialogs;
 
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.beans.util.UpdateBean;
 import lab.data.Location;
 import lab.data.Person;
 import lab.data.enums.Color;
 import lab.database.DatabaseManager;
 
-import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.Arrays;
 import java.util.List;
 
-@Named("personDialogBean")
-@SessionScoped
-public class PersonDialogBean implements Serializable {
+@ManagedBean(name = "personDialogBean")
+@ViewScoped
+public class PersonDialogBean {
     @EJB
     private DatabaseManager databaseManager;
-    @Inject
     private UpdateBean updateBean;
     private Person person = new Person();
     private Integer selectedLocationId;
 
     private boolean editing = false;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void openAddDialog() {
         person = new Person();

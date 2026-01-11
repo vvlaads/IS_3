@@ -7,8 +7,7 @@ import lab.util.annotations.MoreThan;
 import lab.util.annotations.NotEmpty;
 import lab.util.annotations.NotNull;
 
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity

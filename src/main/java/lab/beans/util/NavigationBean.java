@@ -1,13 +1,11 @@
 package lab.beans.util;
 
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
-import java.io.Serializable;
-
-@Named("navigationBean")
+@ManagedBean(name = "navigationBean")
 @SessionScoped
-public class NavigationBean implements Serializable {
+public class NavigationBean {
     private String currentPage;
 
     public String getCurrentPage() {

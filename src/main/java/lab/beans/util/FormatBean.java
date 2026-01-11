@@ -1,10 +1,9 @@
 package lab.beans.util;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Named;
-
-@Named("formatBean")
+@ManagedBean(name = "formatBean")
 @RequestScoped
 public class FormatBean {
     public String formatMoney(long amount) {

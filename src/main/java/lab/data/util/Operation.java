@@ -5,7 +5,7 @@ import lab.util.annotations.Min;
 import lab.util.annotations.NotEmpty;
 import lab.util.annotations.NotNull;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "operations")

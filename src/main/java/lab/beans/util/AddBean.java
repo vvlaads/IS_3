@@ -1,13 +1,13 @@
 package lab.beans.util;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Named;
 import org.primefaces.PrimeFaces;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import java.util.Arrays;
 import java.util.List;
 
-@Named("addBean")
+@ManagedBean(name = "addBean")
 @RequestScoped
 public class AddBean {
     private String className;

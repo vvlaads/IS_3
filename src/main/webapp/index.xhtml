@@ -11,16 +11,16 @@
     <h:outputStylesheet name="index.css"/>
 </h:head>
 
-<f:metadata>
-    <f:event type="preRenderView" listener="#{navigationBean.markPage('index')}"/>
-</f:metadata>
-
 <h:body>
     <p:poll interval="5"
             listener="#{updateController.checkAllUpdates}"
             update=":movieForm:movieTable :personForm:personTable :locationForm:locationTable :coordinatesForm:coordinatesTable"
             onerror="window.location.reload();"
             global="false"/>
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{navigationBean.markPage('index')}"/>
+    </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 

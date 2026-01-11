@@ -1,19 +1,20 @@
 package lab.beans.util;
 
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.data.Movie;
 import lab.data.Person;
 import lab.database.DatabaseManager;
 
-import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 
-@Named("specialFunctionBean")
+@ManagedBean(name = "specialFunctionBean")
 @SessionScoped
-public class SpecialFunctionBean implements Serializable {
+public class SpecialFunctionBean {
 
     @EJB
     private DatabaseManager databaseManager;
@@ -24,11 +25,17 @@ public class SpecialFunctionBean implements Serializable {
     private int minGoldenPalm;
     private int minLength;
     private int oscarsToAdd;
-    @Inject
     private UpdateBean updateBean;
 
     private List<Movie> resultMovies;
     private List<Person> resultOperators;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void deleteByGoldenPalmCount() {
         int result = databaseManager.deleteMovieByGoldenPalmCount(goldenPalmCount);

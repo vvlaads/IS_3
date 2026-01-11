@@ -1,8 +1,5 @@
 package lab.beans.util;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.beans.conflicts.CoordinatesConflicts;
 import lab.beans.conflicts.LocationConflicts;
 import lab.beans.conflicts.PersonConflicts;
@@ -16,33 +13,59 @@ import lab.beans.profiles.LocationProfileBean;
 import lab.beans.profiles.MovieProfileBean;
 import lab.beans.profiles.PersonProfileBean;
 
-@Named("updateController")
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+
+@ManagedBean(name = "updateController")
 @RequestScoped
 public class UpdateController {
-    @Inject
     private MovieBean movieBean;
-    @Inject
+
     private PersonBean personBean;
-    @Inject
+
     private LocationBean locationBean;
-    @Inject
+
     private CoordinatesBean coordinatesBean;
-    @Inject
     private CoordinatesConflicts coordinatesConflicts;
-    @Inject
     private LocationConflicts locationConflicts;
-    @Inject
     private PersonConflicts personConflicts;
-    @Inject
+
     private CoordinatesProfileBean coordinatesProfileBean;
-    @Inject
     private LocationProfileBean locationProfileBean;
-    @Inject
     private PersonProfileBean personProfileBean;
-    @Inject
     private MovieProfileBean movieProfileBean;
-    @Inject
     private OperationBean operationBean;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        movieBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{movieBean}", MovieBean.class);
+        personBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{personBean}", PersonBean.class);
+        locationBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{locationBean}", LocationBean.class);
+        coordinatesBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{coordinatesBean}", CoordinatesBean.class);
+        coordinatesConflicts = context.getApplication()
+                .evaluateExpressionGet(context, "#{coordinatesConflicts}", CoordinatesConflicts.class);
+        locationConflicts = context.getApplication()
+                .evaluateExpressionGet(context, "#{locationConflicts}", LocationConflicts.class);
+        personConflicts = context.getApplication()
+                .evaluateExpressionGet(context, "#{personConflicts}", PersonConflicts.class);
+        coordinatesProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{coordinatesProfileBean}", CoordinatesProfileBean.class);
+        locationProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{locationProfileBean}", LocationProfileBean.class);
+        personProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{personProfileBean}", PersonProfileBean.class);
+        movieProfileBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{movieProfileBean}", MovieProfileBean.class);
+        operationBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{operationBean}", OperationBean.class);
+    }
 
     public void checkAllUpdates() {
         movieBean.checkForUpdates();

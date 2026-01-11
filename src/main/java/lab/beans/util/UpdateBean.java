@@ -1,13 +1,11 @@
 package lab.beans.util;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
 
-import java.io.Serializable;
-
-@Named("updateBean")
+@ManagedBean(name = "updateBean")
 @ApplicationScoped
-public class UpdateBean implements Serializable {
+public class UpdateBean {
     private long version = 0;
 
     public void increaseVersion() {

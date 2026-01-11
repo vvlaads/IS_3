@@ -1,21 +1,29 @@
 package lab.beans.util;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import lab.beans.util.RedirectBean;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import java.util.Arrays;
 import java.util.List;
 
-@Named("searchBean")
+@ManagedBean(name = "searchBean")
 @RequestScoped
 public class SearchBean {
-    @Inject
     private RedirectBean redirectBean;
 
     private String className;
     private final List<String> classNameList = Arrays.asList("Movie", "Person", "Location", "Coordinates");
     private int id;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        redirectBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{redirectBean}", RedirectBean.class);
+    }
 
     public void findByID() {
         switch (className) {

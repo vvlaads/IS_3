@@ -10,16 +10,16 @@
     <h:outputStylesheet name="profiles.css"/>
 </h:head>
 
-<f:metadata>
-    <f:viewParam name="id" value="#{personProfileBean.id}"/>
-</f:metadata>
-
 <h:body>
     <p:poll interval="5"
             listener="#{updateController.checkPersonProfileUpdates}"
             update=":personProfileForm"
             onerror="window.location.reload();"
             global="false"/>
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{personProfileBean.id}"/>
+    </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 

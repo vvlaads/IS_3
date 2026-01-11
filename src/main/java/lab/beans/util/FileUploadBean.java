@@ -1,24 +1,32 @@
 package lab.beans.util;
 
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.data.util.Operation;
 import lab.database.DatabaseManager;
 import org.primefaces.model.file.UploadedFile;
 
-@Named("fileUploadBean")
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+
+@ManagedBean(name = "fileUploadBean")
 @RequestScoped
 public class FileUploadBean {
     @EJB
     private DatabaseManager databaseManager;
 
-    @Inject
     private UpdateBean updateBean;
     private UploadedFile file;
+
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void upload() {
         try {

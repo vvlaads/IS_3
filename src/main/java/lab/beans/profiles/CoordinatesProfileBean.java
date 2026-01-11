@@ -1,23 +1,21 @@
 package lab.beans.profiles;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.beans.util.Updatable;
 import lab.beans.util.UpdateBean;
 import lab.data.Coordinates;
 import lab.database.DatabaseManager;
 
-import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
-@Named("coordinatesProfileBean")
+@ManagedBean(name = "coordinatesProfileBean")
 @SessionScoped
-public class CoordinatesProfileBean implements Updatable, Serializable {
+public class CoordinatesProfileBean implements Updatable {
     @EJB
     private DatabaseManager databaseManager;
-    @Inject
     private UpdateBean updateBean;
     private long lastKnownVersion = -1;
 
@@ -26,6 +24,9 @@ public class CoordinatesProfileBean implements Updatable, Serializable {
 
     @PostConstruct
     public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
         lastKnownVersion = updateBean.getVersion();
         updateTable();
     }

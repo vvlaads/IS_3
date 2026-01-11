@@ -11,11 +11,11 @@
     <h:outputStylesheet name="specFuncs.css"/>
 </h:head>
 
-<f:metadata>
-    <f:event type="preRenderView" listener="#{navigationBean.markPage('specFuncs')}"/>
-</f:metadata>
-
 <h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{navigationBean.markPage('specFuncs')}"/>
+    </f:metadata>
+
     <ui:include src="/templates/topMenu.xhtml"/>
 
     <!-- 1. Удалить по goldenPalmCount -->

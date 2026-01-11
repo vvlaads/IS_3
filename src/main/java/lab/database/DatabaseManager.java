@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lab.data.Movie;
 import lab.data.Person;
 import lab.util.DBObject;
 import lab.util.Validator;
 
+import javax.ejb.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
+import javax.validation.ValidationException;
 import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
@@ -23,32 +23,56 @@ public class DatabaseManager {
     @PersistenceContext(unitName = "PersistenceUnit")
     private EntityManager em;
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void addObject(DBObject object) {
-        if (!Validator.isValidObject(object)) {
-            throw new IllegalArgumentException(object.getClass() + " validation failed");
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        try {
+            if (!Validator.isValidObject(object)) {
+                throw new IllegalArgumentException(object.getClass() + " validation failed");
+            }
+
+            em.persist(object);
+
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            System.err.println(e.getMessage());
         }
-        em.persist(object);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void updateObject(DBObject object) {
-        if (!Validator.isValidObject(object)) {
-            throw new IllegalArgumentException(object.getClass() + " validation failed");
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        try {
+            if (Validator.isValidObject(object)) {
+                if (em.find(object.getClass(), object.getId()) == null) {
+                    throw new RuntimeException(object.getClass() + " doesn't exist");
+                }
+                em.merge(object);
+            } else {
+                throw new IllegalArgumentException(object.getClass() + "validation failed");
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            System.err.println(e.getMessage());
         }
-        if (em.find(object.getClass(), object.getId()) == null) {
-            throw new RuntimeException(object.getClass() + " doesn't exist");
-        }
-        em.merge(object);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public <T extends DBObject> void deleteObject(Class<T> entityClass, int id) {
-        DBObject existObject = em.find(entityClass, id);
-        if (existObject == null) {
-            throw new RuntimeException(entityClass + " with id: " + id + " doesn't exist");
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        try {
+            DBObject existObject = em.find(entityClass, id);
+            if (existObject == null) {
+                throw new RuntimeException(entityClass + " with id: " + id + " doesn't exist");
+            }
+            em.remove(existObject);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            System.err.println(e.getMessage());
         }
-        em.remove(existObject);
     }
 
     public <T extends DBObject> List<T> getObjectList(Class<T> clazz) {
@@ -122,10 +146,22 @@ public class DatabaseManager {
     }
 
     public void rewardLongMovies(int minLength, int oscarsToAdd) {
-        em.createNativeQuery("SELECT reward_long_movies(?, ?)")
-                .setParameter(1, minLength)
-                .setParameter(2, oscarsToAdd)
-                .executeUpdate();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            em.createNativeQuery("SELECT reward_long_movies(?, ?)")
+                    .setParameter(1, minLength)
+                    .setParameter(2, oscarsToAdd)
+                    .executeUpdate();
+            transaction.commit();
+            System.out.println("Наградили все фильмы длиннее " + minLength + " на " + oscarsToAdd + " Оскаров");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Ошибка при награждении фильмов: " + e.getMessage());
+            System.err.println(e.getMessage());
+        }
     }
 
 
@@ -149,8 +185,9 @@ public class DatabaseManager {
                 .getResultList();
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public int importObjects(byte[] fileContent) {
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
         try {
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -166,18 +203,26 @@ public class DatabaseManager {
                 throw new IOException("Unsupported JSON root type: " + root.getNodeType());
             }
 
-            int totalCount = objects.stream()
-                    .filter(Validator::isValidObject)
-                    .mapToInt(this::countAllIncludesObjects)
-                    .sum();
+            int totalCount = 0;
+            for (DBObject obj : objects) {
+                if (!Validator.isValidObject(obj)) {
+                    throw new ValidationException("Ошибка валидации");
+                }
+                totalCount += countAllIncludesObjects(obj);
+            }
 
-            objects.forEach(em::persist);
+            for (DBObject obj : objects) {
+                em.persist(obj);
+            }
+            transaction.commit();
             return totalCount;
         } catch (Exception e) {
             System.err.println("Ошибка добавления: " + e.getMessage());
+            transaction.rollback();
             return -1;
         }
     }
+
 
     private int countAllIncludesObjects(DBObject mainObject) {
         int count = 0;

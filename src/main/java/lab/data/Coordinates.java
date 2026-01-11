@@ -3,7 +3,7 @@ package lab.data;
 import lab.util.DBObject;
 import lab.util.annotations.NotNull;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "coordinates")

@@ -1,9 +1,5 @@
 package lab.beans.dialogs;
 
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.beans.util.UpdateBean;
 import lab.data.Coordinates;
 import lab.data.Movie;
@@ -12,16 +8,19 @@ import lab.data.enums.MovieGenre;
 import lab.data.enums.MpaaRating;
 import lab.database.DatabaseManager;
 
-import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import java.util.Arrays;
 import java.util.List;
 
-@Named("movieDialogBean")
-@SessionScoped
-public class MovieDialogBean implements Serializable {
+@ManagedBean(name = "movieDialogBean")
+@ViewScoped
+public class MovieDialogBean {
     @EJB
     private DatabaseManager databaseManager;
-    @Inject
     private UpdateBean updateBean;
     private Movie movie = new Movie();
 
@@ -31,6 +30,13 @@ public class MovieDialogBean implements Serializable {
     private Integer selectedCoordinatesId;
 
     private boolean editing = false;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void openAddDialog() {
         movie = new Movie();

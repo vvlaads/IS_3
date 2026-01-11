@@ -1,25 +1,31 @@
 package lab.beans.dialogs;
 
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.beans.util.UpdateBean;
 import lab.data.Coordinates;
 import lab.database.DatabaseManager;
 
-import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
-@Named("coordinatesDialogBean")
-@SessionScoped
-public class CoordinatesDialogBean implements Serializable {
+@ManagedBean(name = "coordinatesDialogBean")
+@ViewScoped
+public class CoordinatesDialogBean {
     @EJB
     private DatabaseManager databaseManager;
-    @Inject
     private UpdateBean updateBean;
     private Coordinates coordinates = new Coordinates();
 
     private boolean editing = false;
+
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
+    }
 
     public void openAddDialog() {
         coordinates = new Coordinates();

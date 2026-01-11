@@ -1,33 +1,34 @@
 package lab.beans.conflicts;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJB;
-import jakarta.enterprise.context.SessionScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import lab.beans.util.Updatable;
 import lab.beans.util.UpdateBean;
 import lab.data.Location;
 import lab.data.Person;
 import lab.database.DatabaseManager;
 
-import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.util.List;
 
-@Named("locationConflicts")
+@ManagedBean(name = "locationConflicts")
 @SessionScoped
-public class LocationConflicts implements Updatable, Serializable {
+public class LocationConflicts implements Updatable {
     @EJB
     private DatabaseManager databaseManager;
-    @Inject
-    private UpdateBean updateBean;
     private int locationId;
     private List<Person> conflictPersonList;
+    private UpdateBean updateBean;
     private long lastKnownVersion;
     private boolean allowed = false;
 
     @PostConstruct
     public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        updateBean = context.getApplication()
+                .evaluateExpressionGet(context, "#{updateBean}", UpdateBean.class);
         lastKnownVersion = updateBean.getVersion();
         updateTable();
     }
