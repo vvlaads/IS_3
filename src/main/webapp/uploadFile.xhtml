@@ -11,11 +11,11 @@
     <h:outputStylesheet name="uploadFile.css"/>
 </h:head>
 
-<h:body>
-    <f:metadata>
-        <f:event type="preRenderView" listener="#{navigationBean.markPage('uploadFile')}"/>
-    </f:metadata>
+<f:metadata>
+    <f:event type="preRenderView" listener="#{navigationBean.markPage('uploadFile')}"/>
+</f:metadata>
 
+<h:body>
     <ui:include src="/templates/topMenu.xhtml"/>
 
     <div class="upload-container">

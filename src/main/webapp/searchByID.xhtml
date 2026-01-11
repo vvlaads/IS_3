@@ -11,11 +11,11 @@
     <h:outputStylesheet name="findByClass.css"/>
 </h:head>
 
-<h:body>
-    <f:metadata>
-        <f:event type="preRenderView" listener="#{navigationBean.markPage('searchByID')}"/>
-    </f:metadata>
+<f:metadata>
+    <f:event type="preRenderView" listener="#{navigationBean.markPage('searchByID')}"/>
+</f:metadata>
 
+<h:body>
     <ui:include src="/templates/topMenu.xhtml"/>
 
     <div class="find-container">

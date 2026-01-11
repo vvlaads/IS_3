@@ -10,16 +10,16 @@
     <h:outputStylesheet name="profiles.css"/>
 </h:head>
 
+<f:metadata>
+    <f:viewParam name="id" value="#{coordinatesProfileBean.id}"/>
+</f:metadata>
+
 <h:body>
     <p:poll interval="5"
             listener="#{updateController.checkCoordinatesProfileUpdates}"
             update=":coordinatesProfileForm"
             onerror="window.location.reload();"
             global="false"/>
-
-    <f:metadata>
-        <f:viewParam name="id" value="#{coordinatesProfileBean.id}"/>
-    </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 

@@ -11,16 +11,16 @@
     <h:outputStylesheet name="history.css"/>
 </h:head>
 
+<f:metadata>
+    <f:event type="preRenderView" listener="#{navigationBean.markPage('history')}"/>
+</f:metadata>
+
 <h:body>
     <p:poll interval="5"
             listener="#{updateController.checkHistoryUpdates}"
             update=":historyForm:historyTable"
             onerror="window.location.reload();"
             global="false"/>
-
-    <f:metadata>
-        <f:event type="preRenderView" listener="#{navigationBean.markPage('history')}"/>
-    </f:metadata>
 
     <ui:include src="/templates/topMenu.xhtml"/>
 
