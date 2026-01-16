@@ -6,7 +6,7 @@ import lab.data.Person;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -14,7 +14,7 @@ import javax.faces.context.FacesContext;
 @ManagedBean(name = "personProfileBean")
 @SessionScoped
 public class PersonProfileBean implements Updatable {
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
     private long lastKnownVersion = -1;
     private UpdateBean updateBean;

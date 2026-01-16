@@ -5,7 +5,7 @@ import lab.data.Coordinates;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -13,7 +13,7 @@ import javax.faces.context.FacesContext;
 @ManagedBean(name = "coordinatesDialogBean")
 @ViewScoped
 public class CoordinatesDialogBean {
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
     private UpdateBean updateBean;
     private Coordinates coordinates = new Coordinates();

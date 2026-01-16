@@ -5,7 +5,7 @@ import lab.data.Person;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
@@ -16,7 +16,7 @@ import java.util.List;
 @SessionScoped
 public class SpecialFunctionBean {
 
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
 
     private int goldenPalmCount;

@@ -7,7 +7,7 @@ import lab.data.enums.Color;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -17,7 +17,7 @@ import java.util.List;
 @ManagedBean(name = "personDialogBean")
 @ViewScoped
 public class PersonDialogBean {
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
     private UpdateBean updateBean;
     private Person person = new Person();

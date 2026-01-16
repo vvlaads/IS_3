@@ -30,4 +30,4 @@ replay_pid*
 target/
 
 # Environment
-.env
+src/main/webapp/.env

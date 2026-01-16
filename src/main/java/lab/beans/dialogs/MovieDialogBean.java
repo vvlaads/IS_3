@@ -9,7 +9,7 @@ import lab.data.enums.MpaaRating;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -19,7 +19,7 @@ import java.util.List;
 @ManagedBean(name = "movieDialogBean")
 @ViewScoped
 public class MovieDialogBean {
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
     private UpdateBean updateBean;
     private Movie movie = new Movie();

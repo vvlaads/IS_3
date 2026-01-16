@@ -6,7 +6,7 @@ import lab.data.Movie;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @ManagedBean(name = "movieBean")
 @SessionScoped
 public class MovieBean implements Updatable {
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
     private List<Movie> filteredMovieList;
 

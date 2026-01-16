@@ -9,21 +9,43 @@ import lab.data.Person;
 import lab.util.DBObject;
 import lab.util.Validator;
 
-import javax.ejb.*;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.*;
 import javax.validation.ValidationException;
 import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
-@Stateless
+@ApplicationScoped
 public class DatabaseManager {
-    @PersistenceContext(unitName = "PersistenceUnit")
-    private EntityManager em;
+    private EntityManagerFactory emf;
+
+    @Inject
+    private DBCPDataSourceProvider provider;
+
+    private EntityManager createEntityManager() {
+        return emf.createEntityManager();
+    }
+
+    @PostConstruct
+    void init() {
+        Map<String, Object> props = new HashMap<>();
+        props.put("javax.persistence.nonJtaDataSource", provider.getDataSource());
+        emf = Persistence.createEntityManagerFactory("PersistenceUnit", props);
+    }
+
+    @PreDestroy
+    void shutdown() {
+        if (emf != null) {
+            emf.close();
+        }
+    }
 
     public void addObject(DBObject object) {
+        EntityManager em = createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
@@ -41,6 +63,7 @@ public class DatabaseManager {
     }
 
     public void updateObject(DBObject object) {
+        EntityManager em = createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
@@ -60,6 +83,7 @@ public class DatabaseManager {
     }
 
     public <T extends DBObject> void deleteObject(Class<T> entityClass, int id) {
+        EntityManager em = createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
@@ -76,11 +100,13 @@ public class DatabaseManager {
     }
 
     public <T extends DBObject> List<T> getObjectList(Class<T> clazz) {
+        EntityManager em = createEntityManager();
         String query = "SELECT obj FROM " + clazz.getSimpleName() + " obj";
         return em.createQuery(query, clazz).getResultList();
     }
 
     public <T extends DBObject> T getObjectById(Class<T> clazz, int id) {
+        EntityManager em = createEntityManager();
         try {
             T obj = em.find(clazz, id);
             if (obj == null) {
@@ -95,6 +121,7 @@ public class DatabaseManager {
     }
 
     public Integer deleteMovieByGoldenPalmCount(int count) {
+        EntityManager em = createEntityManager();
         try {
             return (Integer) em.createNativeQuery("SELECT delete_movie_by_golden_palm_count(?)")
                     .setParameter(1, count)
@@ -106,6 +133,7 @@ public class DatabaseManager {
     }
 
     public List<Movie> getMoviesByNamePrefix(String prefix) {
+        EntityManager em = createEntityManager();
         try {
             return em.createNativeQuery(
                             "SELECT * FROM get_movies_by_name_prefix(?)", Movie.class)
@@ -119,6 +147,7 @@ public class DatabaseManager {
 
 
     public List<Movie> findMoviesByGoldenPalmCountGreaterThan(int minCount) {
+        EntityManager em = createEntityManager();
         try {
             return em.createNativeQuery("SELECT * FROM get_movies_by_golden_palm_count(?)", Movie.class)
                     .setParameter(1, minCount)
@@ -131,6 +160,7 @@ public class DatabaseManager {
 
 
     public List<Person> findOperatorsWithoutOscars() {
+        EntityManager em = createEntityManager();
         try {
             List<Person> operators = em.createNativeQuery(
                             "SELECT * FROM get_operators_without_oscars()", Person.class)
@@ -146,6 +176,7 @@ public class DatabaseManager {
     }
 
     public void rewardLongMovies(int minLength, int oscarsToAdd) {
+        EntityManager em = createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
@@ -166,18 +197,21 @@ public class DatabaseManager {
 
 
     public List<Movie> findMoviesByCoordinatesId(int coordinatesId) {
+        EntityManager em = createEntityManager();
         return em.createQuery("SELECT m FROM Movie m WHERE m.coordinates.id = :coordinatesId", Movie.class)
                 .setParameter("coordinatesId", coordinatesId)
                 .getResultList();
     }
 
     public List<Person> findPersonsByLocationId(int locationId) {
+        EntityManager em = createEntityManager();
         return em.createQuery("SELECT p FROM Person p WHERE p.location.id = :locationId", Person.class)
                 .setParameter("locationId", locationId)
                 .getResultList();
     }
 
     public List<Movie> findMoviesByPersonId(int personId) {
+        EntityManager em = createEntityManager();
         return em.createQuery("SELECT m FROM Movie m WHERE m.director.id = :personId " +
                         "OR m.screenwriter.id = :personId " +
                         "OR m.operator.id = :personId ", Movie.class)
@@ -186,6 +220,7 @@ public class DatabaseManager {
     }
 
     public int importObjects(byte[] fileContent) {
+        EntityManager em = createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         try {
@@ -222,7 +257,6 @@ public class DatabaseManager {
             return -1;
         }
     }
-
 
     private int countAllIncludesObjects(DBObject mainObject) {
         int count = 0;

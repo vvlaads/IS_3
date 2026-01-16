@@ -9,8 +9,6 @@
         <!-- EclipseLink -->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-        <non-jta-data-source>java:jboss/datasources/labs</non-jta-data-source>
-
         <!-- Сущности -->
         <class>lab.data.Coordinates</class>
         <class>lab.data.Location</class>
@@ -29,11 +27,6 @@
                       value="ehcache.xml"/>
 
             <property name="eclipselink.logging.level.sql" value="FINE"/>
-
-            <!-- JNDI Connector -->
-            <property name="eclipselink.session.customizer"
-                      value="lab.database.EclipseCustomizer"/>
-            <property name="eclipselink.weaving" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>

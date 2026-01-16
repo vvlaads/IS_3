@@ -7,7 +7,7 @@ import lab.database.DatabaseManager;
 import lab.data.enums.Color;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @ManagedBean(name = "personBean")
 @SessionScoped
 public class PersonBean implements Updatable {
-    @EJB
+    @Inject
     private DatabaseManager databaseManager;
     private List<Person> filteredPersonList;
 
