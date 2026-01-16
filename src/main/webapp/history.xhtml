@@ -53,7 +53,7 @@
             </p:column>
 
             <p:column headerText="Действия" width="15%">
-                <p:commandButton value="Скачать" action="#{fileUploadBean.download(op.filename)}" ajax="false"/>
+                <p:commandButton value="Скачать" action="#{fileUploadBean.download(op.filename)}" ajax="false" disabled="#{op.count == 0}"/>
             </p:column>
         </p:dataTable>
     </h:form>

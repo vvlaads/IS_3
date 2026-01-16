@@ -51,7 +51,8 @@ public class FileUploadBean {
 
             fileName = UUID.randomUUID() + "_" + fileName;
 
-            minIOStorageBean.uploadFile(fileContent, fileName);
+            String tmpKey = "tmp-" + fileName;
+            minIOStorageBean.uploadFile(fileContent, tmpKey);
 
             String sessionId = FacesContext.getCurrentInstance()
                     .getExternalContext()
@@ -63,10 +64,12 @@ public class FileUploadBean {
             int result = databaseManager.importObjects(fileContent);
             if (result > 0) {
                 showMessage("Успешно выполнено", "Добавлено " + result + " объектов");
+                minIOStorageBean.renameObject(tmpKey, fileName);
                 operation.setCompleted(true);
                 operation.setCount(result);
             } else {
                 showError("Ошибка при добавлении объектов");
+                minIOStorageBean.deleteObject(tmpKey);
                 operation.setCompleted(false);
                 operation.setCount(0);
             }

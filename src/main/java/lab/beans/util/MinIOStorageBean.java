@@ -69,4 +69,24 @@ public class MinIOStorageBean {
             return baos.toByteArray();
         }
     }
+
+    public void renameObject(String tmpKey, String finalKey) {
+        s3.copyObject(builder -> builder
+                .sourceBucket(MinioClientProvider.getBucket())
+                .sourceKey(tmpKey)
+                .destinationBucket(MinioClientProvider.getBucket())
+                .destinationKey(finalKey)
+        );
+        s3.deleteObject(builder -> builder
+                .bucket(MinioClientProvider.getBucket())
+                .key(tmpKey)
+        );
+    }
+
+    public void deleteObject(String key) {
+        s3.deleteObject(builder -> builder
+                .bucket(MinioClientProvider.getBucket())
+                .key(key)
+        );
+    }
 }
