@@ -17,6 +17,9 @@ public class FileUploadBean {
     @Inject
     private DatabaseManager databaseManager;
 
+    @Inject
+    private MinIOStorageBean minIOStorageBean;
+
     private UpdateBean updateBean;
     private UploadedFile file;
 
@@ -42,6 +45,9 @@ public class FileUploadBean {
                 showError("Неверный тип файла");
                 return;
             }
+
+            minIOStorageBean.uploadFile(fileContent, fileName);
+
             String sessionId = FacesContext.getCurrentInstance()
                     .getExternalContext()
                     .getSessionId(true);
