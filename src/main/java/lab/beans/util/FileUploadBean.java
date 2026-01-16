@@ -51,9 +51,6 @@ public class FileUploadBean {
 
             fileName = UUID.randomUUID() + "_" + fileName;
 
-            String tmpKey = "tmp-" + fileName;
-            minIOStorageBean.uploadFile(fileContent, tmpKey);
-
             String sessionId = FacesContext.getCurrentInstance()
                     .getExternalContext()
                     .getSessionId(true);
@@ -61,20 +58,30 @@ public class FileUploadBean {
             operation.setUsername(sessionId);
             operation.setFilename(fileName);
 
-            int result = databaseManager.importObjects(fileContent);
-            if (result > 0) {
-                showMessage("Успешно выполнено", "Добавлено " + result + " объектов");
+            String tmpKey = "tmp-" + fileName;
+            boolean fileUploaded = false;
+            try {
+                minIOStorageBean.uploadFile(fileContent, tmpKey);
+                fileUploaded = true;
+                int result = databaseManager.importObjects(fileContent);
+                if (result <= 0) {
+                    throw new RuntimeException("DB import failed");
+                }
                 minIOStorageBean.renameObject(tmpKey, fileName);
+                showMessage("Успешно выполнено", "Добавлено " + result + " объектов");
                 operation.setCompleted(true);
                 operation.setCount(result);
-            } else {
-                showError("Ошибка при добавлении объектов");
-                minIOStorageBean.deleteObject(tmpKey);
+            } catch (Exception e) {
+                if (fileUploaded) {
+                    minIOStorageBean.deleteObject(tmpKey);
+                }
                 operation.setCompleted(false);
                 operation.setCount(0);
+                throw e;
+            } finally {
+                databaseManager.addObject(operation);
+                updateBean.increaseVersion();
             }
-            databaseManager.addObject(operation);
-            updateBean.increaseVersion();
         } catch (Exception e) {
             showError("Внутренняя ошибка: " + e.getMessage());
         }
