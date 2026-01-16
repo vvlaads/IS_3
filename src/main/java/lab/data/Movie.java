@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Cacheable(value = true)
 @Table(name = "movies")
 public class Movie implements DBObject {
     @Id
