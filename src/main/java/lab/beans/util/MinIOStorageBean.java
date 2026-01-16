@@ -4,12 +4,15 @@ import lab.util.MinioClientProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -48,5 +51,22 @@ public class MinIOStorageBean {
         Files.delete(tempFile);
 
         System.out.println("Файл загружен в MinIO: " + key);
+    }
+
+    public byte[] downloadFile(String key) throws IOException {
+        try (InputStream s3InputStream = s3.getObject(
+                GetObjectRequest.builder()
+                        .bucket(MinioClientProvider.getBucket())
+                        .key(key)
+                        .build()
+        )) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = s3InputStream.read(buffer)) != -1) {
+                baos.write(buffer, 0, read);
+            }
+            return baos.toByteArray();
+        }
     }
 }

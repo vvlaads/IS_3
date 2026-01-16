@@ -24,6 +24,11 @@ public class Operation implements DBObject {
     @Min(0)
     private int count;
 
+    @Column
+    @NotEmpty
+    @NotNull
+    private String filename;
+
     public Operation() {
     }
 
@@ -58,5 +63,13 @@ public class Operation implements DBObject {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String fileName) {
+        this.filename = fileName;
     }
 }

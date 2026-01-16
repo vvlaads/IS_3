@@ -36,7 +36,7 @@
                      scrollable="true"
                      scrollWidth="100%">
 
-            <p:column headerText="ID" style="text-align:center;" width="25%">
+            <p:column headerText="ID" style="text-align:center;" width="10%">
                 <h:outputText value="#{op.id}"/>
             </p:column>
 
@@ -52,6 +52,9 @@
                 <h:outputText value="#{op.count}"/>
             </p:column>
 
+            <p:column headerText="Действия" width="15%">
+                <p:commandButton value="Скачать" action="#{fileUploadBean.download(op.filename)}" ajax="false"/>
+            </p:column>
         </p:dataTable>
     </h:form>
 </h:body>
