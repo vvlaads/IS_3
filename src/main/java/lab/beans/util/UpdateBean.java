@@ -1,11 +1,12 @@
 package lab.beans.util;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import java.io.Serializable;
 
-@ManagedBean(name = "updateBean")
+@Named("updateBean")
 @ApplicationScoped
-public class UpdateBean {
+public class UpdateBean implements Serializable {
     private long version = 0;
 
     public void increaseVersion() {

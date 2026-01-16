@@ -2,12 +2,12 @@ package lab.beans.util;
 
 import org.primefaces.PrimeFaces;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import java.util.Arrays;
 import java.util.List;
 
-@ManagedBean(name = "addBean")
+@Named("addBean")
 @RequestScoped
 public class AddBean {
     private String className;

@@ -7,11 +7,11 @@ import org.primefaces.model.file.UploadedFile;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 
-@ManagedBean(name = "fileUploadBean")
+@Named("fileUploadBean")
 @RequestScoped
 public class FileUploadBean {
     @Inject

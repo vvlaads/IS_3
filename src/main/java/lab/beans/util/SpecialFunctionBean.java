@@ -6,15 +6,15 @@ import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.List;
 
-@ManagedBean(name = "specialFunctionBean")
+@Named("specialFunctionBean")
 @SessionScoped
-public class SpecialFunctionBean {
+public class SpecialFunctionBean implements Serializable {
 
     @Inject
     private DatabaseManager databaseManager;

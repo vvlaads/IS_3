@@ -7,15 +7,16 @@ import lab.data.Movie;
 import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.List;
 
-@ManagedBean(name = "coordinatesConflicts")
+@Named("coordinatesConflicts")
 @SessionScoped
-public class CoordinatesConflicts implements Updatable {
+public class CoordinatesConflicts implements Updatable, Serializable {
     @Inject
     private DatabaseManager databaseManager;
     private int coordinatesId;

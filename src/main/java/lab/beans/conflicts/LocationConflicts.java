@@ -8,14 +8,15 @@ import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.List;
 
-@ManagedBean(name = "locationConflicts")
+@Named("locationConflicts")
 @SessionScoped
-public class LocationConflicts implements Updatable {
+public class LocationConflicts implements Updatable, Serializable {
     @Inject
     private DatabaseManager databaseManager;
     private int locationId;

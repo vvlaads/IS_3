@@ -8,16 +8,17 @@ import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ManagedBean(name = "locationBean")
+@Named("locationBean")
 @SessionScoped
-public class LocationBean implements Updatable {
+public class LocationBean implements Updatable, Serializable {
     @Inject
     private DatabaseManager databaseManager;
     private List<Location> locationList;

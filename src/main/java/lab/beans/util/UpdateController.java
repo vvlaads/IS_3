@@ -14,11 +14,11 @@ import lab.beans.profiles.MovieProfileBean;
 import lab.beans.profiles.PersonProfileBean;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 import javax.faces.context.FacesContext;
 
-@ManagedBean(name = "updateController")
+@Named("updateController")
 @RequestScoped
 public class UpdateController {
     private MovieBean movieBean;

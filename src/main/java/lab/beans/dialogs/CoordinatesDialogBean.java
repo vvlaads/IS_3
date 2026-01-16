@@ -6,11 +6,11 @@ import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
+import javax.inject.Named;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-@ManagedBean(name = "coordinatesDialogBean")
+@Named("coordinatesDialogBean")
 @ViewScoped
 public class CoordinatesDialogBean {
     @Inject

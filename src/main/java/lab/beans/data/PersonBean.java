@@ -8,15 +8,16 @@ import lab.data.enums.Color;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ManagedBean(name = "personBean")
+@Named("personBean")
 @SessionScoped
-public class PersonBean implements Updatable {
+public class PersonBean implements Updatable, Serializable {
     @Inject
     private DatabaseManager databaseManager;
     private List<Person> filteredPersonList;

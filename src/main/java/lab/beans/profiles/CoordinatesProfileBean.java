@@ -7,13 +7,14 @@ import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 
-@ManagedBean(name = "coordinatesProfileBean")
+@Named("coordinatesProfileBean")
 @SessionScoped
-public class CoordinatesProfileBean implements Updatable {
+public class CoordinatesProfileBean implements Updatable, Serializable {
     @Inject
     private DatabaseManager databaseManager;
     private UpdateBean updateBean;

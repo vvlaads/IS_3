@@ -7,17 +7,18 @@ import lab.database.DatabaseManager;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ManagedBean(name = "movieBean")
+@Named("movieBean")
 @SessionScoped
-public class MovieBean implements Updatable {
+public class MovieBean implements Updatable, Serializable {
     @Inject
     private DatabaseManager databaseManager;
     private List<Movie> filteredMovieList;

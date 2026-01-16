@@ -1,13 +1,14 @@
 package lab.beans.util;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
+import java.io.Serializable;
 
-@ManagedBean(name = "redirectBean")
+@Named("redirectBean")
 @ApplicationScoped
-public class RedirectBean {
+public class RedirectBean implements Serializable {
 
     public void redirectTo(String page) {
         redirectTo(page, null);
