@@ -5,26 +5,35 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
              version="2.1">
 
-    <persistence-unit name="PersistenceUnit" transaction-type="JTA">
+    <persistence-unit name="PersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <!-- EclipseLink -->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:jboss/datasources/labs</jta-data-source>
+
+        <non-jta-data-source>java:jboss/datasources/labs</non-jta-data-source>
 
         <!-- Сущности -->
         <class>lab.data.Coordinates</class>
         <class>lab.data.Location</class>
         <class>lab.data.Movie</class>
         <class>lab.data.Person</class>
-
-        <!-- Вспомогательные сущности -->
         <class>lab.data.util.Operation</class>
 
         <!-- Настройки БД -->
         <properties>
-            <property name="javax.persistence.schema-generation.database.action" value="none"/>
-            <property name="eclipselink.ddl-generation" value="none"/>
-            <property name="eclipselink.logging.level" value="FINE"/>
-            <property name="eclipselink.logging.parameters" value="true"/>
-            <property name="eclipselink.logging.parameters" value="true"/>
+            <!-- L2 cache -->
+            <property name="eclipselink.cache.shared.default" value="true"/>
+            <property name="eclipselink.cache.type.default" value="Full"/>
+            <property name="eclipselink.cache.provider"
+                      value="org.eclipse.persistence.cache.EhcacheCacheProvider"/>
+            <property name="eclipselink.cache.provider_config"
+                      value="ehcache.xml"/>
+
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+
+            <!-- JNDI Connector -->
+            <property name="eclipselink.session.customizer"
+                      value="lab.database.EclipseCustomizer"/>
+            <property name="eclipselink.weaving" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>
