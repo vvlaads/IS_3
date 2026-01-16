@@ -20,6 +20,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 @ApplicationScoped
+@CacheStats
 public class DatabaseManager {
     private EntityManagerFactory emf;
 
@@ -35,6 +36,7 @@ public class DatabaseManager {
         Map<String, Object> props = new HashMap<>();
         props.put("javax.persistence.nonJtaDataSource", provider.getDataSource());
         emf = Persistence.createEntityManagerFactory("PersistenceUnit", props);
+        CacheStatsInterceptor.setEntityManagerFactory(emf);
     }
 
     @PreDestroy
